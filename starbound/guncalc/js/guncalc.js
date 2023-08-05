@@ -31,6 +31,17 @@ function update(){
   let energyusage = Number(document.getElementById("energy-usage").value);
   let dps = Number(document.getElementById("dps").value);
   let firetime = Number(document.getElementById("fire-time").value);
+  
+  let auto = document.getElementById("auto");
+  if (auto.checked == true){
+    auto = 1;
+  } else {
+    auto = 0;
+  }
+  let firestance = Number(document.getElementById("firestance").value);
+
+  console.log(auto);
+  console.log(firestance);
 
   let eShot = energyusage * firetime;
   let dShot = dps * firetime;
@@ -38,7 +49,7 @@ function update(){
   let sBar = Math.ceil(maxenergy/eShot);
   let dBar = sBar * dShot;
 
-  let tDps = ((dShot * sBar) / ((firetime * sBar) + blocktime + regentime));
+  let tDps = ((dShot * sBar) / ((((auto * firestance) + firetime) * sBar) + blocktime + regentime));
   let tDpsRegen =  ((dShot * sBar) / ((firetime * sBar) + regentime));
 
   //update periodically
