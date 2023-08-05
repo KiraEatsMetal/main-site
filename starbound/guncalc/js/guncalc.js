@@ -24,13 +24,13 @@ function update(){
   //stuff here
   let output = document.getElementById("output");
 
-  let maxenergy = document.getElementById("max-energy").value;
+  let maxenergy = Number(document.getElementById("max-energy").value);
   let blocktime = Number(document.getElementById("block-time").value);
   let regentime = Number(document.getElementById("regen-time").value);
   
-  let energyusage = document.getElementById("energy-usage").value;
-  let dps = document.getElementById("dps").value;
-  let firetime = document.getElementById("fire-time").value;
+  let energyusage = Number(document.getElementById("energy-usage").value);
+  let dps = Number(document.getElementById("dps").value);
+  let firetime = Number(document.getElementById("fire-time").value);
 
   let eShot = energyusage * firetime;
   let dShot = dps * firetime;
@@ -42,9 +42,9 @@ function update(){
   let tDpsRegen =  ((dShot * sBar) / ((firetime * sBar) + regentime));
 
   //update periodically
-  let final = ": "+String(sBar)+"<br>: "+String(dBar)+"<br>: "+String(tDps)+"<br>: "+String(tDpsRegen);
+  let final = "energy per shot: "+String(eShot)+"<br>damage per shot: "+String(dShot)+"<br>shots per bar: "+String(sBar)+"<br>damage per bar: "+String(dBar)+"<br>total dps: "+String(tDps)+"<br>total dps with energy regen: "+String(tDpsRegen);
   console.log(final);
   output.innerHTML = final;
-  setTimeout(update, 3000);
+  setTimeout(update, 500);
   console.log("repeating");
 }
