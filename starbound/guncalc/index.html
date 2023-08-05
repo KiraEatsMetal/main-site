@@ -2,15 +2,23 @@
 <html>
 <head>
     <title>gun calc</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="/css/site.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="js/guncalc.js" defer></script>
 </head>
 <body>
     <h1>gun calc</h1>
-    <h2>insert gun parameters</h2>
-    <input type="number" id="energy-usage" value="0">energy usage</input>
-    <input type="number" id="dps" value="0">base dps</input>
-    <input type="number" id="fire-time" value="0">fire time</input>
+    <h2>fuck up some gun parameters</h2>
+    <h2>player constants</h2>
+    <p>max energy - energy block time - energy regen time</p>
+    <input type="number" id="max-energy" value=100></input>
+    <input type="number" id="block-time" value=1.5></input>
+    <input type="number" id="regen-time" value=1.75></input>
+    <h2>gun parameters</h2>
+    <p>energy usage - base dps - fire time</p>
+    <input type="number" id="energy-usage" value=0></input>
+    <input type="number" id="dps" value=0></input>
+    <input type="number" id="fire-time" value=0></input>
+    <div id="output">output</div>
 </body>
 </html>
