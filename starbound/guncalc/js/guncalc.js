@@ -62,13 +62,15 @@ function calcGun(maxenergy, blocktime, regentime, energyusage, dps, firetime, au
 
   let normal = halfCalc(eShot, dShot, shotTime, blocktime, eRegenSecond, regentime, maxenergy);
   let regen = halfCalc(eShot, dShot, shotTime, 0, eRegenSecond, regentime, maxenergy);
+  let normalHalf = halfCalc(eShot, dShot, shotTime / 2, blocktime, eRegenSecond, regentime, maxenergy);
+  let regenHalf = halfCalc(eShot, dShot, shotTime / 2, 0, eRegenSecond, regentime, maxenergy);
 
   //let sBar = Math.ceil(maxenergy / eShot);
   //let dBar = sBar * dShot;
   //let tDps = ((dShot * sBar) / ((shotTime * sBar) + blocktime + regentime));
 
   //let final = {eShot, dShot, sBar, dBar, tDps, tDpsRegen}
-  let final = {eShot, dShot, normal, regen}
+  let final = {eShot, dShot, normal, regen, normalHalf, regenHalf}
   return final
 }
 
@@ -115,6 +117,12 @@ function update(){
   } else {
     auto = 0;
   }
+  let dual = document.getElementById("dual");
+  if (dual.checked == true){
+    dual = 1;
+  } else {
+    dual = 0;
+  }
   let firestance = Number(document.getElementById("firestance").value);
   
   //feeding gun calc
@@ -123,13 +131,30 @@ function update(){
   //updating output with gun calc results
   let final = "<br>energy per shot: " + results.eShot;
   final += "<br>damage per shot: " + results.dShot;
+
   final += "<br><br>shots per bar: " + results.normal.sBar;
   final += "<br>damage per bar: " + results.normal.dBar;
   final += "<br>total dps: " + results.normal.tDps;
+
+  if (dual == 1) {
+    final += "<br><br>dual wield:";
+    final += "<br>shots per bar: " + results.normalHalf.sBar;
+    final += "<br>damage per bar: " + results.normalHalf.dBar;
+    final += "<br>total dps: " + results.normalHalf.tDps;
+  }
+  
   final += "<br><br>with energy regen:";
   final += "<br>shots per bar: " + results.regen.sBar;
   final += "<br>damage per bar: " + results.regen.dBar;
   final += "<br>total dps: " + results.regen.tDps;
+  
+  if (dual == 1) {
+    final += "<br><br>dual wield energy regen:";
+    final += "<br>shots per bar: " + results.regenHalf.sBar;
+    final += "<br>damage per bar: " + results.regenHalf.dBar;
+    final += "<br>total dps: " + results.regenHalf.tDps;
+  }
+  
   output.innerHTML = final;
 
   //getting the selected reference and its stats
@@ -142,14 +167,28 @@ function update(){
   let refout = document.getElementById("refout");
   refout.innerHTML = "energy per shot: " + results.eShot;
   refout.innerHTML += "<br>damage per shot: " + results.dShot;
+
   refout.innerHTML += "<br><br>shots per bar: " + results.normal.sBar;
   refout.innerHTML += "<br>damage per bar: " + results.normal.dBar;
   refout.innerHTML += "<br>total dps: " + results.normal.tDps;
+
+  if (dual == 1) {
+    refout.innerHTML += "<br><br>dual wield:";
+    refout.innerHTML += "<br>shots per bar: " + results.normalHalf.sBar;
+    refout.innerHTML += "<br>damage per bar: " + results.normalHalf.dBar;
+    refout.innerHTML += "<br>total dps: " + results.normalHalf.tDps;
+  }
   refout.innerHTML += "<br><br>with energy regen:";
   refout.innerHTML += "<br>shots per bar: " + results.regen.sBar;
   refout.innerHTML += "<br>damage per bar: " + results.regen.dBar;
   refout.innerHTML += "<br>total dps: " + results.regen.tDps;
-
+  
+  if (dual == 1) {
+    refout.innerHTML += "<br><br>dual wield energy regen:";
+    refout.innerHTML += "<br>shots per bar: " + results.regenHalf.sBar;
+    refout.innerHTML += "<br>damage per bar: " + results.regenHalf.dBar;
+    refout.innerHTML += "<br>total dps: " + results.regenHalf.tDps;
+  }
   //update periodically
   setTimeout(update, 500);
 }
