@@ -57,14 +57,42 @@ function calcGun(maxenergy, blocktime, regentime, energyusage, dps, firetime, au
 
   let eShot = energyusage * firetime;
   let dShot = dps * firetime;
+  let eRegenSecond = maxenergy / regentime;
+  let shotTime = ((auto * firestance) + firetime);
 
-  let sBar = Math.ceil(maxenergy/eShot);
-  let dBar = sBar * dShot;
+  let normal = halfCalc(eShot, dShot, shotTime, blocktime, eRegenSecond, regentime, maxenergy);
+  let regen = halfCalc(eShot, dShot, shotTime, 0, eRegenSecond, regentime, maxenergy);
 
-  let tDps = ((dShot * sBar) / ((((auto * firestance) + firetime) * sBar) + blocktime + regentime));
-  let tDpsRegen =  ((dShot * sBar) / ((firetime * sBar) + regentime));
+  //let sBar = Math.ceil(maxenergy / eShot);
+  //let dBar = sBar * dShot;
+  //let tDps = ((dShot * sBar) / ((shotTime * sBar) + blocktime + regentime));
 
-  let final = {eShot, dShot, sBar, dBar, tDps, tDpsRegen}
+  //let final = {eShot, dShot, sBar, dBar, tDps, tDpsRegen}
+  let final = {eShot, dShot, normal, regen}
+  return final
+}
+
+function halfCalc (eShot, dShot, shotTime, blocktime, eRegenSecond, regentime, maxenergy){
+  //console.log(eShot, dShot, shotTime, blocktime, eRegenSecond, regentime, maxenergy);
+  let bShotEnergy = (shotTime - blocktime) * eRegenSecond;
+  bShotEnergy = Math.max(bShotEnergy, 0)
+  let eShotT = eShot - bShotEnergy;
+  //console.log(eShotT)
+
+  let sBar = "infinite";
+  let dBar = "infinite";
+  if (eShotT > 0) {
+    sBar = Math.ceil(maxenergy / eShotT);
+    dBar = sBar * dShot;
+  }
+
+  let tDps = dShot / shotTime;
+  if (eShotT > 0) {
+    tDps = (dBar / ((shotTime * sBar) + blocktime + regentime));
+  }
+
+  let final = {sBar, dBar, tDps}
+  //console.log(final);
   return final
 }
 
@@ -93,20 +121,35 @@ function update(){
   let results = calcGun(maxenergy, blocktime, regentime, energyusage, dps, firetime, auto, firestance);
 
   //updating output with gun calc results
-  let final = "energy per shot: "+results.eShot+"<br>damage per shot: "+results.dShot+"<br>shots per bar: "+results.sBar+"<br>damage per bar: "+results.dBar+"<br>total dps: "+results.tDps+"<br>total dps with energy regen: "+results.tDpsRegen;
+  let final = "<br>energy per shot: " + results.eShot;
+  final += "<br>damage per shot: " + results.dShot;
+  final += "<br><br>shots per bar: " + results.normal.sBar;
+  final += "<br>damage per bar: " + results.normal.dBar;
+  final += "<br>total dps: " + results.normal.tDps;
+  final += "<br><br>with energy regen:";
+  final += "<br>shots per bar: " + results.regen.sBar;
+  final += "<br>damage per bar: " + results.regen.dBar;
+  final += "<br>total dps: " + results.regen.tDps;
   output.innerHTML = final;
 
   //getting the selected reference and its stats
   let chosenGun = document.getElementById("reference").value;
   let gunDict = referenceStats[chosenGun];
-  console.log(chosenGun);
+  //console.log(chosenGun)
   results = calcGun(maxenergy, blocktime, regentime, gunDict.energyusage, gunDict.dps, gunDict.firetime, gunDict.auto, gunDict.firestance);
 
   //displaying the reference's stats
   let refout = document.getElementById("refout");
-  refout.innerHTML = chosenGun+"<br>energy per shot: "+results.eShot+"<br>damage per shot: "+results.dShot+"<br>shots per bar: "+results.sBar+"<br>damage per bar: "+results.dBar+"<br>total dps: "+results.tDps+"<br>total dps with energy regen: "+results.tDpsRegen;;
+  refout.innerHTML = "energy per shot: " + results.eShot;
+  refout.innerHTML += "<br>damage per shot: " + results.dShot;
+  refout.innerHTML += "<br><br>shots per bar: " + results.normal.sBar;
+  refout.innerHTML += "<br>damage per bar: " + results.normal.dBar;
+  refout.innerHTML += "<br>total dps: " + results.normal.tDps;
+  refout.innerHTML += "<br><br>with energy regen:";
+  refout.innerHTML += "<br>shots per bar: " + results.regen.sBar;
+  refout.innerHTML += "<br>damage per bar: " + results.regen.dBar;
+  refout.innerHTML += "<br>total dps: " + results.regen.tDps;
 
   //update periodically
   setTimeout(update, 500);
-  //console.log("repeating");
 }
