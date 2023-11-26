@@ -85,6 +85,9 @@ function halfCalc (eShot, dShot, shotTime, blocktime, eRegenSecond, regentime, m
   let dBar = "infinite";
   if (eShotT > 0) {
     sBar = Math.ceil(maxenergy / eShotT);
+    if (eShot > maxenergy) {
+      sBar = 1
+    }
     dBar = sBar * dShot;
   }
 
