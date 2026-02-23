@@ -72,6 +72,7 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
     }
 
     console.log(final);
+    console.log();
     return final;
 }
 
