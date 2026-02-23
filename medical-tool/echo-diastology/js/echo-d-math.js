@@ -3,9 +3,9 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
 
     let stageOneMarkerCount = 0;
 
-    let stageTwoMarkerOne = false
-    let stageTwoMarkerTwo = false
-    let stageTwoMarkerThree = false
+    let reducedEp = false
+    let EeHigh = false
+    let TRVelocityHigh = false
 
     let isEALow = false
     let isEAHigh = false
@@ -13,56 +13,55 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
     //graphic 1 marker checking, also marks stage 2 markers 1 and 2 if it finds them
     if (epSeptal <= 6 || epLateral <= 7 || (epSeptal + epLateral) <= 13) {
         stageOneMarkerCount += 1;
-        stageTwoMarkerOne = true
-        //console.log("Reduced e' velocity");
+        reducedEp = true
+        console.log("Reduced e' velocity");
     }
     if (averageEe > 14) {
         stageOneMarkerCount += 1;
-        stageTwoMarkerTwo = true
-        //console.log("High average E/e'");
+        EeHigh = true
+        console.log("High average E/e'");
     }
     if (LAVI > 34) {
         stageOneMarkerCount += 1;
-        //console.log("High LAVI");
+        console.log("High LAVI");
     }
     if (EA <= 0.8) {
         stageOneMarkerCount += 1;
         isEALow = true;
-        //console.log("E/A low");
+        console.log("E/A low");
 
     } else if (EA >= 2) {
         stageOneMarkerCount += 1;
         isEAHigh = true
-        //console.log("E/A high");
+        console.log("E/A high");
     }
 
     //stage 1 marker count
     if (stageOneMarkerCount >= 2) {
-        //console.log("dysfunction present", stageOneMarkerCount);
+        console.log("dysfunction present", stageOneMarkerCount);
         //final = "dysfunction present";
     }
 
     //graphic 2 marker 2 and 3 checking
     if (EeSeptal >= 15 || EeLateral >= 13) {
-        stageTwoMarkerTwo = true;
+        EeHigh = true;
     }
     if (TRVelocity >= 2.8) {
-        stageTwoMarkerThree = true;
+        TRVelocityHigh = true;
     }
-    //console.log(stageTwoMarkerOne, stageTwoMarkerTwo, stageTwoMarkerThree);
+    console.log("reduced e': " + reducedEp + ", E/e' high: " + EeHigh + ", TR velocity high: " + TRVelocityHigh);
+    console.log("is E/A high: " + isEAHigh + ", is E/A low: " + isEALow)
 
     //graphic 2 solving
-    if (stageTwoMarkerTwo || stageTwoMarkerThree) {
-        if (stageTwoMarkerOne) {
-            if (isEAHigh) {
-                final = "grade 3"
-            } else {
-                final = "grade 2"
-            }
+    if (reducedEp && EeHigh && TRVelocityHigh) {
+        if (isEAHigh) {
+            final = "grade 3"
         } else {
-            final = "purple zone"
+            final = "grade 2"
         }
-    } else if (stageTwoMarkerOne) {
+    } else if (EeHigh || TRVelocityHigh) {
+        final = "purple zone"
+    } else if (reducedEp) {
         if (isEALow) {
             final = "grade 1"
         } else {
@@ -72,7 +71,7 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
         final = "normal"
     }
 
-    //console.log(final);
+    console.log(final);
     return final;
 }
 
