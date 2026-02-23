@@ -35,40 +35,41 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
         isEAHigh = true
         console.log("E/A high");
     }
-
+    
     //stage 1 marker count
     if (stageOneMarkerCount >= 2) {
         console.log("dysfunction present", stageOneMarkerCount);
         //final = "dysfunction present";
-    }
 
-    //graphic 2 marker 2 and 3 checking
-    if (EeSeptal >= 15 || EeLateral >= 13) {
-        EeHigh = true;
-    }
-    if (TRVelocity >= 2.8) {
-        TRVelocityHigh = true;
-    }
-    console.log("reduced e': " + reducedEp + ", E/e' high: " + EeHigh + ", TR velocity high: " + TRVelocityHigh);
-    console.log("is E/A high: " + isEAHigh + ", is E/A low: " + isEALow)
-
-    //graphic 2 solving
-    if (reducedEp && EeHigh && TRVelocityHigh) {
-        if (isEAHigh) {
-            final = "grade 3"
-        } else {
-            final = "grade 2"
+        //graphic 2 marker 2 and 3 checking
+        if (EeSeptal >= 15 || EeLateral >= 13) {
+            EeHigh = true;
         }
-    } else if (EeHigh || TRVelocityHigh) {
-        final = "purple zone"
-    } else if (reducedEp) {
-        if (isEALow) {
-            final = "grade 1"
-        } else {
+        if (TRVelocity >= 2.8) {
+            TRVelocityHigh = true;
+        }
+        console.log("reduced e': " + reducedEp + ", E/e' high: " + EeHigh + ", TR velocity high: " + TRVelocityHigh);
+        console.log("is E/A high: " + isEAHigh + ", is E/A low: " + isEALow)
+
+        //graphic 2 solving
+        if (reducedEp && EeHigh && TRVelocityHigh) {
+            if (isEAHigh) {
+                final = "grade 3"
+            } else {
+                final = "grade 2"
+            }
+        } else if (EeHigh || TRVelocityHigh) {
             final = "purple zone"
+        } else if (reducedEp) {
+            if (isEALow) {
+                final = "grade 1"
+            } else {
+                final = "purple zone"
+            }
+        } else {
+            console.log("dysfunction NOT present", stageOneMarkerCount);
+            final = "normal";
         }
-    } else {
-        final = "normal"
     }
 
     console.log(final);
