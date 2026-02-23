@@ -75,7 +75,6 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
     }
 
     console.log(final);
-    console.log();
     return final;
 }
 
@@ -83,22 +82,55 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
 //runFlowChart(1, 20, 16, 14, 15, 50, 7, 2.1);
 
 function update() {
-    let epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI, TRVelocity, EA, final, finalResult
-    //get and assign for each variable 
-    epSeptal = Number(document.getElementById("epSeptal").value);
-    epLateral = Number(document.getElementById("epLateral").value);
-    EeSeptal = Number(document.getElementById("EeSeptal").value);
-    EeLateral = Number(document.getElementById("EeLateral").value);
-    averageEe = Number(document.getElementById("averageEe").value);
-    LAVI = Number(document.getElementById("LAVI").value);
-    TRVelocity = Number(document.getElementById("TRVelocity").value);
-    EA = Number(document.getElementById("EA").value);
+    let finalResult, warningResult
+    const warningArray = []
+    //all variables and their html input ids
+    const variableInput = {
+        epSeptal: "epSeptal",
+        epLateral: "epLateral",
+        EeSeptal: "EeSeptal",
+        EeLateral: "EeLateral",
+        averageEe: "averageEe",
+        LAVI: "LAVI",
+        TRVelocity: "TRVelocity",
+        EA: "EA"
+    }
+
+    console.log();
+    //get and assign for each variable
+    let value
+    for (const key of Object.keys(variableInput)) {
+        value = document.getElementById(variableInput[key]).value
+
+        //console.log(value, value == "", Number(value), Number.isNaN(Number(value)))
+        if (value == "" || Number.isNaN(Number(value))) {
+            console.log(variableInput[key] + " undefined")
+            //if the value isn't a valid number, ex: empty or is words instead, add warning
+            warningArray.push(variableInput[key]);
+            variableInput[key] = 0;
+        } else {
+            console.log(variableInput[key] + " defined and a number: " + Number(value))
+            variableInput[key] = Number(value);
+        }
+    }
     
-    final = runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI, TRVelocity, EA);
+    console.log(variableInput["epSeptal"], variableInput["epLateral"], variableInput["EeSeptal"], variableInput["EeLateral"], variableInput["averageEe"], variableInput["LAVI"], variableInput["TRVelocity"], variableInput["EA"]);
+    console.log();
+
+    finalResult = runFlowChart(variableInput["epSeptal"], variableInput["epLateral"], variableInput["EeSeptal"], variableInput["EeLateral"], variableInput["averageEe"], variableInput["LAVI"], variableInput["TRVelocity"], variableInput["EA"]);
+
+    //display warnings
+    let warning = document.getElementById("warnings");
+    if (warningArray.length > 0) {
+        warningResult = "Warning: missing ";
+        warningArray.forEach(element => {
+            warningResult += element + " ";
+        });
+        warning.innerHTML = warningResult;
+    }
 
     //show the result
     let output = document.getElementById("output");
-    finalResult = final
     output.innerHTML = finalResult;
 
     //console.log('updating');

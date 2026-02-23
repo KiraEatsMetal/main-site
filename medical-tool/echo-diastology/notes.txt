@@ -70,3 +70,6 @@ if m1 true, check ea low
 if elow true, grade 1
 if elow false, purple zone
 if m1 false, normal
+
+
+round e/a to 1 decimal point
