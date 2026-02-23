@@ -39,8 +39,8 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
     //stage 1 marker count
     if (stageOneMarkerCount >= 2) {
         console.log("dysfunction present", stageOneMarkerCount);
-        //final = "dysfunction present";
-
+        //found dysfunction, start checking graphic 2
+        
         //graphic 2 marker 2 and 3 checking
         if (EeSeptal >= 15 || EeLateral >= 13) {
             EeHigh = true;
@@ -67,9 +67,11 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
                 final = "purple zone"
             }
         } else {
-            console.log("dysfunction NOT present", stageOneMarkerCount);
             final = "normal";
         }
+    } else {
+        console.log("dysfunction NOT present", stageOneMarkerCount);
+        final = "normal";
     }
 
     console.log(final);
