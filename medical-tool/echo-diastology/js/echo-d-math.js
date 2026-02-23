@@ -95,6 +95,17 @@ function update() {
         TRVelocity: "TRVelocity",
         EA: "EA"
     }
+    
+    const warningTranslation = {
+        epSeptal: "e' Septal",
+        epLateral: "e' Lateral",
+        EeSeptal: "E/e' Septal",
+        EeLateral: "E/e' Lateral",
+        averageEe: "average E/e'",
+        LAVI: "LA Velo Index",
+        TRVelocity: "TR Velocity",
+        EA: "E/A"
+    }
 
     console.log();
     //get and assign for each variable
@@ -122,9 +133,9 @@ function update() {
     //display warnings
     let warning = document.getElementById("warnings");
     if (warningArray.length > 0) {
-        warningResult = "Warning: missing ";
+        warningResult = "Warning, missing: |";
         warningArray.forEach(element => {
-            warningResult += element + " ";
+            warningResult += warningTranslation[element] + "|";
         });
         warning.innerHTML = warningResult;
     }
