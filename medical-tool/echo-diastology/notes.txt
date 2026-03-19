@@ -1,34 +1,11 @@
 input: an image with a ton of numbers
-first graphic: test for dysfunction, if there, head to second graphic
-second graphic: use those numbers, produce output of :[grade 1, grade 2, grade 3, or PURPLE ZONE, NEED HUMAN INPUT]
 chart at https://www.asecho.org/wp-content/uploads/2025/07/Left-Ventricular-Diastolic-Function.pdf
+//==//
 
+features done: flowchart solver, manual input, image uploading
+features wanted: display uploaded image, read uploaded image, scan read result for values and input them to the html
 
-graphic 1 input: 
-step 1: check e' septal, lateral, average
-step 2: average E/e', LARS, E/A, LAVI
-dysfunction: if e' low and 1+ step 2 markers present OR e' "preserved" (what does this mean?) but 2+ step 2 markers present
-
-total inputs: e' septal, e' lateral, e' average, average E/e', LARS, E/A, LAVI [7 parameters, ignore lars since we don't do lars]
-
-
-if dysfunction, graphic 2 input:
-tests:
-1: check if e values below certain points
-2: check if E/e' values above certain points
-3: check if tr velocity or PASP above certain points
-
-if 1 only: check if e value is <0.8, if so grade 1 ("and if symptomatic, diastolic exercize echo"), else PURPLE ZONE
-if 2, 3, or 'any 2 abnormal variables': PURPLE ZONE
-if 1 & 2 & 3: check if E/A < 2, if so grade 2, else grade 3
-
-total inputs: e' septal, e' lateral, e' average, E/e' septal, E/e' lateral, E/e' average, TR velocity, PASP, E/A [9 parameters, skip PASP, dad doesn't use it]
-
-total inputs: e' septal, e' lateral, average E/e', LAVI, E/e' septal, E/e' lateral, TR velocity, E/A
-calculate e' average
-
-
-
+//==//
 graphic 1:
 dysfunction if: 2+ markers in step 2 OR (e' reduced AND 1+ marker in step 2)
 equal to dysfunction if: 2+ markers, treat any/all lowered e' as one marker

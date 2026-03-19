@@ -1,3 +1,5 @@
+import scribe from './node_modules/scribe.js-ocr/scribe.js';
+
 function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI, TRVelocity, EA){
     let final = "ERROR";
 
@@ -81,7 +83,28 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
 //runFlowChart(1, 2, 3, 4, 5, 6, 7, 8);
 //runFlowChart(1, 20, 16, 14, 15, 50, 7, 2.1);
 
+//detect image upload and show it
+const imageInputElement = document.getElementById("ImageInput");
+console.log(imageInputElement);
+const uploadedImageElement = document.getElementById("UploadedImage");
+console.log(uploadedImageElement);
+imageInputElement.addEventListener("change", () => {
+    console.log(uploadedImageElement.outerHTML);
+    console.log(imageInputElement.value);
+    console.log("<img id=\"UploadedImage\" src=\"" + imageInputElement.value + "\" alt=\"No image uploaded\">");
+    uploadedImageElement.outerHTML = "<img id=\"UploadedImage\" src=\"" + imageInputElement.value + "\" alt=\"No image uploaded\">";
+    console.log(uploadedImageElement.outerHTML);
+})
+
+//read button click in module
+const buttonElement = /** @type {HTMLInputElement} */ (document.getElementById('inputButton'));;
+//console.log(buttonElement)
+buttonElement.addEventListener("click", update)
+
 function update() {
+    //console.log(document.getElementById("ImageInput"));
+    //console.log(document.getElementById("ImageInput").value);
+
     let finalResult, warningResult
     const warningArray = []
     //all variables and their html input ids
