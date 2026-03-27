@@ -80,20 +80,105 @@ function runFlowChart(epSeptal, epLateral, EeSeptal, EeLateral, averageEe, LAVI,
     return final;
 }
 
-//runFlowChart(1, 2, 3, 4, 5, 6, 7, 8);
-//runFlowChart(1, 20, 16, 14, 15, 50, 7, 2.1);
+/*== Scribe stuff ==*/
 
 //detect image upload and show it
 const imageInputElement = document.getElementById("ImageInput");
-console.log(imageInputElement);
-const uploadedImageElement = document.getElementById("UploadedImage");
-console.log(uploadedImageElement);
-imageInputElement.addEventListener("change", () => {
-    console.log(uploadedImageElement.outerHTML);
-    console.log(imageInputElement.value);
-    console.log("<img id=\"UploadedImage\" src=\"" + imageInputElement.value + "\" alt=\"No image uploaded\">");
-    uploadedImageElement.outerHTML = "<img id=\"UploadedImage\" src=\"" + imageInputElement.value + "\" alt=\"No image uploaded\">";
-    console.log(uploadedImageElement.outerHTML);
+
+//const uploadedImageElement = document.getElementById("UploadedImage");
+const outputElem = document.getElementById("output");
+
+imageInputElement.addEventListener("change", async () => {
+    if (!imageInputElement.files) return;
+
+    console.log("recieved image");
+    //const text = await scribe.extractText(imageInputElement.files, ['eng'], 'txt');
+    //console.log(text);
+    //outputElem.textContent = text;
+    //console.log("basic text extraction done");
+    console.log("starting advanced");
+
+    // if you want more control (you do), "use `init`, `importFiles`, `recognize`, and `exportData` separately." scribe.js, line 85
+    const ocrParams = { anyOk: true, vanillaMode: false, langs: ['eng'] };
+    scribe.init({ ocr: true, ocrParams });
+    console.log(imageInputElement.files);
+    await scribe.importFiles(imageInputElement.files);
+    await scribe.recognize(ocrParams.langs);
+    const ocrExport = scribe.exportData('txt');
+    console.log(ocrExport);
+
+    //string modification
+    const cullCharacters = [`~`,`(`,`)`,` `,`-`,`—`,`–`,`_`,"'",`=`,`+`,`,`,`{`,`}`,`“`,`”`,`»`,`¢`,`‘`,`’`,`!`,`:`,`[`,`]`,`§`,`<`,`>`,`*`,``,``,``,``,``,``]
+
+    //get ocr export as string
+    let ocrString = (await ocrExport).valueOf();
+    
+    //remove cull characters, which are all useless
+    for (let i = 0; i < cullCharacters.length; i++) {
+        ocrString = ocrString.replaceAll(cullCharacters[i], "");
+    }
+
+    //split into array by newlines
+    let ocrStringArray = ocrString.split("\n");
+    //remove \n from original string
+    //ocrString = ocrString.replaceAll("\n", "");
+
+    let modifiedOcrStringArray = new Array();
+    //remove entries that are too short to contain useful data
+    for (let i = 0; i < ocrStringArray.length; i++) {
+        if (ocrStringArray[i].length > 2) {
+            modifiedOcrStringArray.push(ocrStringArray[i]);
+        }
+    }
+    
+    //console.log(ocrString);
+    console.log(ocrStringArray);
+    console.log(modifiedOcrStringArray);
+    //console.log(modifiedOcrStringArray.toString());
+    
+    //next: take the modified string array, cut the fluff! if you can't find a data label (ex: mveseptal) in it or any number, remove the entry
+    
+    //things to search for
+    const dataLabels = ["MVE/EMean", "MVESeptal", "LAVolIndex", "MVELateral", "TRVelocity", "MVAVmax", "MVEVmax", "MVE/A", "LVEF"]
+    const numbersArray = ["1","2","3","4","5","6","7","8","9","0"]
+
+    modifiedOcrStringArray.forEach((currentValue, index) => {
+        let hasLabel = false;
+        let hasNum = false;
+        //search for labels
+        dataLabels.forEach((dataValue) => {
+            if (modifiedOcrStringArray[index].toString().match(dataValue)) {
+                hasLabel = true
+            }
+        });
+        //search for numbers
+        numbersArray.forEach((numberValue) => {
+            if (modifiedOcrStringArray[index].toString().match(numberValue)) {
+                hasNum = true
+            }
+        });
+
+        if (!hasLabel && !hasNum) {
+            //we use delete to leave the index values intact and remove the holes delete leaves later
+            delete modifiedOcrStringArray[index]
+        }
+    })
+
+    console.log(modifiedOcrStringArray);
+
+    //removing holes in array
+    for (let i = 0; i < modifiedOcrStringArray.length; i++) {
+        //we are actively changing the array length, break if you exceed it
+        if (i >= modifiedOcrStringArray.length) { break; }
+        //if the array slot has something, skip, else splice out the slot and set i back by 1
+        if (modifiedOcrStringArray[i]) {} else {
+            modifiedOcrStringArray.splice(i, 1);
+            i = i - 1
+        }
+    }
+    
+    console.log(modifiedOcrStringArray);
+    console.log(modifiedOcrStringArray.toString());
 })
 
 //read button click in module
@@ -101,12 +186,15 @@ const buttonElement = /** @type {HTMLInputElement} */ (document.getElementById('
 //console.log(buttonElement)
 buttonElement.addEventListener("click", update)
 
+/*== Scribe stuff end ==*/
+
 function update() {
     //console.log(document.getElementById("ImageInput"));
     //console.log(document.getElementById("ImageInput").value);
 
     let finalResult, warningResult
     const warningArray = []
+
     //all variables and their html input ids
     const variableInput = {
         epSeptal: "epSeptal",
@@ -148,12 +236,12 @@ function update() {
         }
     }
     
-    console.log(variableInput["epSeptal"], variableInput["epLateral"], variableInput["EeSeptal"], variableInput["EeLateral"], variableInput["averageEe"], variableInput["LAVI"], variableInput["TRVelocity"], variableInput["EA"]);
-    console.log();
+    //console.log(variableInput["epSeptal"], variableInput["epLateral"], variableInput["EeSeptal"], variableInput["EeLateral"], variableInput["averageEe"], variableInput["LAVI"], variableInput["TRVelocity"], variableInput["EA"]);
+    //console.log();
 
     finalResult = runFlowChart(variableInput["epSeptal"], variableInput["epLateral"], variableInput["EeSeptal"], variableInput["EeLateral"], variableInput["averageEe"], variableInput["LAVI"], variableInput["TRVelocity"], variableInput["EA"]);
 
-    //display warnings
+    //display missing variable warnings
     let warning = document.getElementById("warnings");
     if (warningArray.length > 0) {
         warningResult = "Warning, missing: |";
@@ -166,9 +254,4 @@ function update() {
     //show the result
     let output = document.getElementById("output");
     output.innerHTML = finalResult;
-
-    //console.log('updating');
-    //setTimeout(update, 500);
 }
-
-//update();
